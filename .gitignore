@@ -1,0 +1,13 @@
+# Byte-compiled
+__pycache__/
+*.py[cod]
+
+# Distribution
+build/
+dist/
+*.spec
+*.egg-info/
+
+# Environments
+.venv/
+.build/
