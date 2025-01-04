@@ -17,7 +17,7 @@ import bext
 
 import pyquarium.aquarium as aq
 
-__version__ = 'v1.2.0'
+__version__ = 'v1.2.1'
 
 def render_aquarium(fish: int, bubblers: int, kelp: int, fps: int):
     """Print a moving aquarium to the terminal.
@@ -66,5 +66,11 @@ def render_aquarium(fish: int, bubblers: int, kelp: int, fps: int):
 
         sys.stdout.flush()  # (Required for bext-using programs.)
         time.sleep(1 / fps)
-        bext.clear()
+        for kelp in kelp_list:
+            kelp.clear()
+        for fish in fish_list:
+            fish.clear()
+        for bubbler in bubblers_list:
+            for bubble in bubbler.bubbles:
+                bubble.clear()
         sys.stdout.flush()

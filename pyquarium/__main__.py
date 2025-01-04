@@ -1,7 +1,9 @@
 import argparse
 import sys
 
-from pyquarium import render_aquarium, __version__
+import bext
+
+from pyquarium import render_aquarium, __version__, aquarium
 
 
 def _get_args() -> argparse.Namespace:
@@ -30,6 +32,9 @@ args.bubblers = min(15, args.bubblers)
 args.kelp = min(15, args.kelp)
 args.fps = min(45, max(1, args.fps))
 try:
+    print('\033[?25l', end="")
     render_aquarium(args.fish, args.bubblers, args.kelp, args.fps)
 except KeyboardInterrupt:
+    bext.goto(0, aquarium.BOTTOM_EDGE)
+    print('\033[?25h', end="")
     sys.exit()
