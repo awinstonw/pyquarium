@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from pyquarium import render_aquarium
+from pyquarium import render_aquarium, __version__
 
 
 def _get_args() -> argparse.Namespace:
@@ -14,10 +14,12 @@ def _get_args() -> argparse.Namespace:
                         help='default=8, max=30, min=0')
     parser.add_argument('-b', '--bubblers', nargs='?', default=3, type=int,
                         help='default=3, max=15, min=0')
-    parser.add_argument('-k', '--kelp', nargs='?', default=4, type=int,
-                        help='default=4, max=15, min=0')
+    parser.add_argument('-k', '--kelp', nargs='?', default=5, type=int,
+                        help='default=5, max=15, min=0')
     parser.add_argument('fps', nargs='?', default=6, type=int,
                         help='default=6, max=45, min=1')
+    parser.add_argument('-v', '--version', action='version',
+                        version=f'%(prog)s version {__version__}')
     return parser.parse_args()
 
 

@@ -17,7 +17,7 @@ import bext
 
 import pyquarium.aquarium as aq
 
-__version__ = 'v1.1.0'
+__version__ = 'v1.2.0'
 
 def render_aquarium(fish: int, bubblers: int, kelp: int, fps: int):
     """Print a moving aquarium to the terminal.
