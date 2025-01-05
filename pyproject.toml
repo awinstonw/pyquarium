@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pyquarium"
 dynamic = ["version"]
-dependencies = ["Bext>=0.1.1"]
+dependencies = []
 requires-python = ">=3.11"
 authors = [{name = "Alexander Walters"}]
 description = "ascii art aquarium for your terminal"

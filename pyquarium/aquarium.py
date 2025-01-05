@@ -1,15 +1,10 @@
-"""Constants for the window size and valid fish art styles, and classes
-for all the possible aqarium members.
+"""Constant for the valid fish art styles, and classes for all the
+possible aqarium members.
 """
 
+import curses
 import random
 
-import bext
-
-RIGHT_EDGE, HEIGHT = bext.size()
-LEFT_EDGE = 0
-TOP_EDGE = 0
-BOTTOM_EDGE = HEIGHT - 1
 # All entries in the dict for an individual fish type must have the same
 # string length.
 FISH_TYPE = [
@@ -36,25 +31,24 @@ FISH_TYPE = [
 class Fish():
     """Fish class for all the fish in the aquarium."""
 
-    def __init__(self, x: int, y: int):
-        """Initialize a fish at cordinates x, y.
+    def __init__(self, y: int, x: int):
+        """Initialize a fish at cordinates y, x.
 
         Keyword arguments:
+        y -- y coordinate.
         x -- x coodrinate.
-        y -- y coordinate
         """
-        fish_colors = ('red', 'green', 'yellow', 'blue', 'purple', 'cyan')
         type = random.choice(FISH_TYPE)
         color_pattern = random.choice(('random', 'head-tail', 'single'))
         self.length = len(type['right'][0])
         if color_pattern == 'random':
             colors = []
             for i in range(self.length):
-                colors.append(random.choice(fish_colors))
+                colors.append(random.choice(range(3, 8)))
         if color_pattern == 'single' or color_pattern == 'head-tail':
-            colors = [random.choice(fish_colors)] * self.length
+            colors = [random.choice(range(3, 8))] * self.length
         if color_pattern == 'head-tail':
-            headTailColor = random.choice(fish_colors)
+            headTailColor = random.choice(range(3, 8))
             colors[0] = headTailColor
             colors[-1] = headTailColor
         self.right = type['right']
@@ -70,19 +64,23 @@ class Fish():
         self.y = y
         self.counter = 1
 
-    def swim(self):
+    def swim(self, bottom_edge: int, right_edge: int):
         """Calculate the random swimming motion of the fish by adjusting
         its x and y.
+
+        Keyword arguments:
+        bottom_edge -- Bottom edge boundary for the fish to swim within.
+        right_edge -- Right edge boundary for the fish to swim within.
         """
         if self.counter % self.h_speed == 0:
             if self.bearing_right:
-                if self.x != RIGHT_EDGE - self.length:
+                if self.x != right_edge - self.length:
                     self.x += 1
                 else:
                     self.bearing_right = False
                     self.color.reverse()
             else:
-                if self.x != LEFT_EDGE:
+                if self.x != 0:
                     self.x -= 1
                 else:
                     self.bearing_right = True
@@ -93,12 +91,12 @@ class Fish():
             self.bearing_right = not self.bearing_right
         if self.counter % self.v_speed == 0:
             if self.descending:
-                if self.y != BOTTOM_EDGE - 1:
+                if self.y != bottom_edge:
                     self.y += 1
                 else:
                     self.descending = False
             else:
-                if self.y != TOP_EDGE:
+                if self.y != 0:
                     self.y -= 1
                 else:
                     self.descending = True
@@ -108,91 +106,102 @@ class Fish():
             self.descending = not self.descending
         self.counter += 1
 
-    def draw(self):
-        """Draw the fish on the terminal window."""
-        bext.goto(self.x, self.y)
-        if self.bearing_right:
-            fishText = self.right[self.counter % len(self.right)]
-        else:
-            fishText = self.left[self.counter % len(self.left)]
-        for i, fishPart in enumerate(fishText):
-            bext.fg(self.color[i])
-            print(fishPart, end='')
+    def draw(self, stdscr):
+        """Draw the fish on the terminal window.
 
-    def clear(self):
-        """Clear the fish from the terminal window."""
-        bext.goto(self.x, self.y)
-        print(' ' * len(self.left[0]), end='')
+        Keyword arguments:
+        stdscr -- Curses window in which to draw.
+        """
+        if self.bearing_right:
+            fish_text = self.right[self.counter % len(self.right)]
+        else:
+            fish_text = self.left[self.counter % len(self.left)]
+        x_position = self.x
+        for i, fish_part in enumerate(fish_text):
+            stdscr.addstr(self.y, self.x, fish_part, curses.color_pair(self.color[i]))
+            self.x += 1
+        self.x = x_position
 
 
 class Bubbler:
     """Class for all the bubble nucleation points in the aquarium."""
 
-    def __init__(self, x: int):
-        """Initialize a bubbler at coordinate x.
+    def __init__(self, y: int, x: int):
+        """Initialize a bubbler at coordinates y, x.
 
         Keyword arguments:
+        y -- y coordinate.
         x -- x coodrinate.
         """
+        self.y = y
         self.x = x
         self.bubbles = []
 
-    def burble(self):
-        """Calculate the random bubbling from the bubbler."""
+    def burble(self, right_edge):
+        """Calculate the random bubbling from the bubbler.
+
+        Keyword arguments:
+        right_edge -- Right boundary for the bubbles to float within.
+        """
         if random.randint(1, 5) == 1:
-            self.bubbles.append(self.Bubble(self.x))
+            self.bubbles.append(self.Bubble(self.y, self.x))
         for i in range(len(self.bubbles) - 1, -1, -1):
-            if self.bubbles[i].y == TOP_EDGE:
+            if self.bubbles[i].y == 0:
                 del self.bubbles[i]
         for bubble in self.bubbles:
-            bubble.float()
+            bubble.float(right_edge)
 
-    class Bubble:
+    class Bubble():
         """Class for the individual bubbles emanating from a Bubbler."""
 
-        def __init__(self, x: int):
-            """Initialize a bubble at coordinate x
+        def __init__(self, y: int, x: int):
+            """Initialize a bubble at coordinates y, x.
 
-            Keyword arguements:
+            Keyword arguments:
+            y -- y coordinate.
             x -- x coordinate.
             """
+            self.y = y + 1
             self.x = x
-            self.y = BOTTOM_EDGE
+            self.origin = y
 
-        def float(self):
-            """Calculate the random floating motion of the bubble."""
+        def float(self, right_edge):
+            """Calculate the random floating motion of the bubble.
+
+            Keyword arguments:
+            right_edge -- Right boundary for the bubbles.
+            """
             diceRoll = random.randint(1, 6)
-            if self.y != BOTTOM_EDGE:  # Bubble up from a fixed point.
-                if (diceRoll == 1) and (self.x != LEFT_EDGE + 1):
+            if self.y != self.origin:  # Bubble up from a fixed point.
+                if (diceRoll == 1) and (self.x > 0):
                     self.x -= 1
-                elif (diceRoll == 2) and (self.x != RIGHT_EDGE - 1):
+                elif (diceRoll == 2) and (self.x < right_edge):
                     self.x += 1
             self.y -= 1
 
-        def draw(self):
-            """Draw the bubble on the terminal window."""
-            bext.fg('white')
-            bext.goto(self.x, self.y)
-            print(random.choice(('o', 'O')), end='')
+        def draw(self, stdscr):
+            """Draw the bubble on the terminal window.
 
-        def clear(self):
-            """Clear the bubble from the terminal window."""
-            bext.goto(self.x, self.y)
-            print(' ', end='')
+            Keyword arguments:
+            stdscr -- Curses window in which to draw.
+            """
+            stdscr.addstr(self.y, self.x, random.choice(('o', 'O')),
+                          curses.color_pair(1))
 
 
 class Kelp:
     """Class for all the kelp strands in the aquarium."""
 
-    def __init__(self, x: int):
-        """Initialize a kelp strand at coordinate x.
+    def __init__(self, y: int, x: int):
+        """Initialize a kelp strand at coordinates y, x.
 
         Keyword arguments:
+        y -- y coordinate.
         x -- x coordinate.
         """
-        self.segments = [random.choice(['(', ')']) for i
-                         in range(random.randint(6, HEIGHT - 1))]
+        self.y = y
         self.x = x
+        self.segments = [random.choice(['(', ')']) for i in range(self.y)]
 
     def sway(self):
         """Calculate the random swaying motion of the kelp strand."""
@@ -203,18 +212,17 @@ class Kelp:
                 elif segment == ')':
                     self.segments[i] = '('
 
-    def draw(self):
-        """Draw the kelp strand on the terminal window."""
-        bext.fg('green')
+    def draw(self, stdscr, bottom_edge: int):
+        """Draw the kelp strand on the terminal window.
+
+        Keyword arguments:
+        stdscr -- Curses window in which to draw.
+        bottom_edge -- Bottom edge at which to position the kelp base.
+        """
         for i, segment in enumerate(self.segments):
             if segment == '(':
-                bext.goto(self.x, BOTTOM_EDGE -1 - i)
+                stdscr.addstr(bottom_edge - i, self.x, segment,
+                              curses.color_pair(3))
             elif segment == ')':
-                bext.goto(self.x + 1, BOTTOM_EDGE -1 - i)
-            print(segment, end='')
-
-    def clear(self):
-        """Clear the kelp strand from the terminal window."""
-        for i in range(len(self.segments)):
-            bext.goto(self.x, HEIGHT - 2 - i)
-            print('  ', end='')
+               stdscr.addstr(bottom_edge - i, self.x + 1, segment,
+                             curses.color_pair(3))
