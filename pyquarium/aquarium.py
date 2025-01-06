@@ -133,7 +133,7 @@ class Bubbler:
         y -- y coordinate.
         x -- x coodrinate.
         """
-        self.y = y
+        self.y = y + 1
         self.x = x
         self.bubbles = []
 
@@ -161,7 +161,7 @@ class Bubbler:
             y -- y coordinate.
             x -- x coordinate.
             """
-            self.y = y + 1
+            self.y = y
             self.x = x
             self.origin = y
 
@@ -193,7 +193,7 @@ class Kelp:
     """Class for all the kelp strands in the aquarium."""
 
     def __init__(self, y: int, x: int):
-        """Initialize a kelp strand at coordinates y, x.
+        """Initialize a kelp strand of height y at x coordinate x.
 
         Keyword arguments:
         y -- y coordinate.
