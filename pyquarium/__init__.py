@@ -4,7 +4,8 @@ in *The Big Book of Small Python Projects*. The code has been refactored
 to be more object oriented and I made some minor edits to the visual
 presentation of the sandy bottom, the logic for determining where the
 individual aquarium member objects spawn and in what z-order, and then
-ported the whole thing over to use curses instead of bext.
+ported the whole thing over to use curses instead of bext. I also added
+the ability to add/remove memebers fromt the aquarium on-the-fly.
 Additionally, I added a CLI.
 Book available: <https://nostarch.com/big-book-small-python-programming>
 """
@@ -15,9 +16,10 @@ import time
 
 import pyquarium.aquarium as aq
 
-__version__ = 'v1.3.0'
+__version__ = 'v1.4.0'
 
-def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int, fps: int):
+def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
+                    fps: int):
     """Print a moving aquarium to the terminal.
 
     Keyword arguments:
@@ -39,6 +41,7 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int, fps: i
         height -= 1
         width -= 1
         bottom = height - 1  # Accounts for the sandy bottom.
+        denominator = fps
         fish_list = [aq.Fish(random.randint(0, bottom),
                              random.randint(0, width - max_length))
                      for i in range(fish_count)]
@@ -46,12 +49,14 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int, fps: i
         # the very edge.
         randoms = [*range(1, width - 1)]
         random.shuffle(randoms)
-        kelp_list = [
-            aq.Kelp(random.randint(6, bottom), x)
-            for x in randoms[bubbler_count:bubbler_count + kelp_count]
-        ]
-        bubbler_list = [aq.Bubbler(bottom, x)
-                        for x in randoms[:bubbler_count]]
+        kelp_list = []
+        bubbler_list = []
+        for x in randoms[:kelp_count]:
+            kelp_list.append(aq.Kelp(random.randint(6, bottom), x))
+            del randoms[0]
+        for x in randoms[:bubbler_count]:
+            bubbler_list.append(aq.Bubbler(bottom, x))
+            del randoms[0]
         # Color 1 is the bubble color.
         curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
         # Color 3 is the kelp color.
@@ -69,6 +74,30 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int, fps: i
             curses.flushinp()
             if key == ord('q'):
                 break
+            elif key == ord('f'):
+                fish_list.append(aq.Fish(random.randint(0, bottom),
+                                 random.randint(0, width - max_length)))
+            elif key == ord('d') and fish_list:
+                del fish_list[0]
+            elif key == ord('k') and randoms:
+                kelp_list.append(aq.Kelp(random.randint(6, bottom),
+                                         randoms[0]))
+                del randoms[0]
+            elif key == ord('j') and kelp_list:
+                randoms.append(kelp_list[0].x)
+                random.shuffle(randoms)
+                del kelp_list[0]
+            elif key == ord('b') and randoms:
+                bubbler_list.append(aq.Bubbler(bottom, randoms[0]))
+                del randoms[0]
+            elif key == ord('v') and bubbler_list:
+                randoms.append(bubbler_list[0].x)
+                random.shuffle(randoms)
+                del bubbler_list[0]
+            elif key == ord('+'):
+                denominator += 1
+            elif key == ord('-') and denominator > 1:
+                denominator -= 1
             # Draw the aquarium members with the kelp at the back, the fish
             # in the middle, and the bubbles up front.
             for kelp in kelp_list:
@@ -84,6 +113,6 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int, fps: i
             # Draw '░' for the sandy bottom.
             stdscr.addstr(height, 0, chr(9617) * width, curses.color_pair(4))
             stdscr.refresh()
-            time.sleep(1 / fps)
+            time.sleep(1 / denominator)
 
     curses.wrapper(main)
