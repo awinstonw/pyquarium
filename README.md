@@ -73,5 +73,5 @@ python3 -m pyquarium 10
 
 Run pyquarium at 7 fps with 9 fish, 10 bubblers, 4 kelp.
 ```shell
-python3 -m pyquarium 9 -f 10 -b 4 -k 7
+python3 -m pyquarium -f 9 -b 10 -k 4 7
 ```
