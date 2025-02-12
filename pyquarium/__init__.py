@@ -5,7 +5,7 @@ to be more object oriented and I made some minor edits to the visual
 presentation of the sandy bottom, the logic for determining where the
 individual aquarium member objects spawn and in what z-order, and then
 ported the whole thing over to use curses instead of bext. I also added
-the ability to add/remove memebers fromt the aquarium on-the-fly.
+the ability to add/remove memebers from the aquarium on-the-fly.
 Additionally, I added a CLI.
 Book available: <https://nostarch.com/big-book-small-python-programming>
 """

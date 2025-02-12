@@ -28,7 +28,7 @@ FISH_TYPE = [
 ]
 
 
-class Fish():
+class Fish:
     """Fish class for all the fish in the aquarium."""
 
     def __init__(self, y: int, x: int):
@@ -151,7 +151,7 @@ class Bubbler:
         for bubble in self.bubbles:
             bubble.float(right_edge)
 
-    class Bubble():
+    class Bubble:
         """Class for the individual bubbles emanating from a Bubbler."""
 
         def __init__(self, y: int, x: int):
