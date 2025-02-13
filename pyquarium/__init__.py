@@ -16,7 +16,7 @@ import time
 
 import pyquarium.aquarium as aq
 
-__version__ = 'v1.4.1'
+__version__ = 'v1.4.2'
 
 def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
                     fps: int):
@@ -71,8 +71,10 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
         while True:
             stdscr.clear()
             key = stdscr.getch()
+            curses.curs_set(0)
             curses.flushinp()
             if key == ord('q'):
+                curses.endwin()
                 break
             elif key == ord('f'):
                 fish_list.append(aq.Fish(random.randint(0, bottom),

@@ -26,7 +26,10 @@ ASCII art aquarium for your terminal. Written in Python.
                                  )  )                       (           (
 ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 ```
-
+## Install
+```shell
+pip install pyquarium
+```
 ## Synopsis
 pyquarium [OPTION] [FPS]
 ## Description
