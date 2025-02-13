@@ -12,8 +12,8 @@ def _get_args() -> argparse.Namespace:
     )
     parser.add_argument('-f', '--fish', nargs='?', default=8, type=int,
                         help='default=8')
-    parser.add_argument('-b', '--bubblers', nargs='?', default=3, type=int,
-                        help='default=3')
+    parser.add_argument('-b', '--bubblers', nargs='?', default=1, type=int,
+                        help='default=1')
     parser.add_argument('-k', '--kelp', nargs='?', default=5, type=int,
                         help='default=5')
     parser.add_argument('fps', nargs='?', default=6, type=int,
