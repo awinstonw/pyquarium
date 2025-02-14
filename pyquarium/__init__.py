@@ -36,6 +36,7 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
             max_length = len(type['right'][0])
 
     def main(stdscr):
+        curses.curs_set(0)
         stdscr.nodelay(True)
         height, width = stdscr.getmaxyx()
         height -= 1
@@ -71,7 +72,6 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
         while True:
             stdscr.clear()
             key = stdscr.getch()
-            curses.curs_set(0)
             curses.flushinp()
             if key == ord('q'):
                 curses.endwin()
