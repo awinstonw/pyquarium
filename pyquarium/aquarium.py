@@ -118,7 +118,8 @@ class Fish:
             fish_text = self.left[self.counter % len(self.left)]
         x_position = self.x
         for i, fish_part in enumerate(fish_text):
-            stdscr.addstr(self.y, self.x, fish_part, curses.color_pair(self.color[i]))
+            stdscr.addstr(self.y, self.x, fish_part,
+                          curses.color_pair(self.color[i]))
             self.x += 1
         self.x = x_position
 

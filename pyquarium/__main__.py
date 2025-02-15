@@ -23,8 +23,5 @@ def _get_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-args= _get_args()
-try:
-    render_aquarium(args.fish, args.bubblers, args.kelp, args.fps)
-except KeyboardInterrupt:
-    sys.exit()
+args = _get_args()
+render_aquarium(args.fish, args.bubblers, args.kelp, args.fps)
