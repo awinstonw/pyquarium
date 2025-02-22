@@ -33,7 +33,7 @@ pip install pyquarium
 ## Synopsis
 pyquarium [OPTION] [FPS]
 ## Description
-Run pyquarium in ther terminal at the rate of FPS frames-per-second.
+Run pyquarium in the terminal at the rate of FPS frames-per-second.
 
 **-b,  --bubblers**  
 &nbsp;&nbsp;&nbsp;&nbsp;Number of bubble nucleation points to display.
@@ -49,16 +49,16 @@ Run pyquarium in ther terminal at the rate of FPS frames-per-second.
 
 ### Controls
 **f, d**  
-&nbsp;&nbsp;&nbsp;&nbsp;Add / remove a fish  
+&nbsp;&nbsp;&nbsp;&nbsp;Add / remove a fish.
 
 **k, j**  
-&nbsp;&nbsp;&nbsp;&nbsp;Add / remove kelp
+&nbsp;&nbsp;&nbsp;&nbsp;Add / remove kelp.
 
 **b, v**  
-&nbsp;&nbsp;&nbsp;&nbsp;Add / remove bubbles
+&nbsp;&nbsp;&nbsp;&nbsp;Add / remove bubbles.
 
 **+, -**  
-&nbsp;&nbsp;&nbsp;&nbsp;Increase / decrease the refresh rate
+&nbsp;&nbsp;&nbsp;&nbsp;Increase / decrease the refresh rate.
 
 **q**  
 &nbsp;&nbsp;&nbsp;&nbsp;Quit the program.
@@ -69,7 +69,7 @@ Run pyquarium with all default options.
 python3 -m pyquarium
 ```
 
-Run pyquarum at 10 fps
+Run pyquarum at 10 fps.
 ```shell
 python3 -m pyquarium 10
 ```
