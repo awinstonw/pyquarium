@@ -41,8 +41,8 @@ class Fish:
         type = random.choice(FISH_TYPE)
         color_pattern = random.choice(('random', 'head-tail', 'single'))
         self.length = len(type['right'][0])
+        colors = []
         if color_pattern == 'random':
-            colors = []
             for i in range(self.length):
                 colors.append(random.choice(range(3, 8)))
         if color_pattern == 'single' or color_pattern == 'head-tail':
