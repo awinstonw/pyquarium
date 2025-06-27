@@ -12,11 +12,13 @@ Book available: <https://nostarch.com/big-book-small-python-programming>
 
 import curses
 import random
+import sys
 import time
 
 import pyquarium.aquarium as aq
 
-__version__ = 'v1.4.3'
+__version__ = 'v1.4.4'
+
 
 def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
                     fps: int):
@@ -69,11 +71,18 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
         curses.init_pair(6, curses.COLOR_BLUE, curses.COLOR_BLACK)
         curses.init_pair(7, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
         curses.init_pair(8, curses.COLOR_CYAN, curses.COLOR_BLACK)
+
         while True:
             stdscr.clear()
             key = stdscr.getch()
             curses.flushinp()
             if key == ord('q'):
+                # 2025-06-26: In python 3.13 curses.endwin() is throwing
+                # an error and not exiting cleanly for some unknown
+                # reason. Keeping the code the same here it now throws
+                # the error up to the containing try/except block which
+                # calls sys.exit() when handling a curses.error and then
+                #  exits cleanly from there.
                 curses.endwin()
                 break
             elif key == ord('f'):
@@ -119,5 +128,5 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
 
     try:
         curses.wrapper(main)
-    except KeyboardInterrupt:
-        curses.endwin()
+    except (KeyboardInterrupt, curses.error):
+        sys.exit()
