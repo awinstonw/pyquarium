@@ -17,7 +17,7 @@ import time
 
 import pyquarium.aquarium as aq
 
-__version__ = 'v1.4.4'
+__version__ = 'v2.0.0'
 
 
 def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
@@ -128,5 +128,5 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
 
     try:
         curses.wrapper(main)
-    except (KeyboardInterrupt, curses.error):
+    except KeyboardInterrupt, curses.error:
         sys.exit()
