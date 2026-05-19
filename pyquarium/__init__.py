@@ -17,7 +17,7 @@ import time
 
 import pyquarium.aquarium as aq
 
-__version__ = 'v2.0.0'
+__version__ = 'v2.0.1'
 
 
 def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
