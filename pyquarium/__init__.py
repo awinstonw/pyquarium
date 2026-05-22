@@ -5,8 +5,8 @@ to be more object oriented and I made some minor edits to the visual
 presentation of the sandy bottom, the logic for determining where the
 individual aquarium member objects spawn and in what z-order, and then
 ported the whole thing over to use curses instead of bext. I also added
-the ability to add/remove memebers from the aquarium on-the-fly.
-Additionally, I added a CLI.
+the ability to add/remove memebers from the aquarium on-the-fly
+including a new castle decoration. Additionally, I added a CLI.
 Book available: <https://nostarch.com/big-book-small-python-programming>
 """
 
@@ -17,23 +17,24 @@ import time
 
 import pyquarium.aquarium as aq
 
-__version__ = 'v2.0.1'
+__version__ = 'v2.1.0'
 
 
 def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
-                    fps: int):
+                    include_castle: bool, fps: int):
     """Print a moving aquarium to the terminal.
 
     Keyword arguments:
     fish -- the number of fish to show.
     bubblers -- the number of bubble generators to show.
     kelp -- the number of kelp strands.
+    include_castle -- include the castle decoration?
     fps -- the speed of the simulation.
     """
     # Longest fish in the type dictionary to avoid spawning a fish
     # ouside the terminal boundary.
     max_length = 0
-    for type in aq.FISH_TYPE:
+    for type in aq.Fish.FISH_TYPE:
         if len(type['right'][0]) > max_length:
             max_length = len(type['right'][0])
 
@@ -60,6 +61,9 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
         for x in randoms[:bubbler_count]:
             bubbler_list.append(aq.Bubbler(bottom, x))
             del randoms[0]
+        castle_flag = include_castle
+        if castle_flag:
+            castle = aq.Castle(bottom, random.randint(11, width - 1))
         # Color 1 is the bubble color.
         curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
         # Color 3 is the kelp color.
@@ -71,7 +75,6 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
         curses.init_pair(6, curses.COLOR_BLUE, curses.COLOR_BLACK)
         curses.init_pair(7, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
         curses.init_pair(8, curses.COLOR_CYAN, curses.COLOR_BLACK)
-
         while True:
             stdscr.clear()
             key = stdscr.getch()
@@ -82,7 +85,7 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
                 # reason. Keeping the code the same here it now throws
                 # the error up to the containing try/except block which
                 # calls sys.exit() when handling a curses.error and then
-                #  exits cleanly from there.
+                # exits cleanly from there.
                 curses.endwin()
                 break
             elif key == ord('f'):
@@ -105,12 +108,20 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
                 randoms.append(bubbler_list[0].x)
                 random.shuffle(randoms)
                 del bubbler_list[0]
+            elif key == ord('c'):
+                castle = aq.Castle(bottom, random.randint(11, width - 1))
+                castle_flag = True
+            elif key == ord('x'):
+                castle_flag = False
+                del castle
             elif key == ord('+'):
                 denominator += 1
             elif key == ord('-') and denominator > 1:
                 denominator -= 1
-            # Draw the aquarium members with the kelp at the back, the fish
-            # in the middle, and the bubbles up front.
+            # Draw the aquarium members with the kelp at the back, the
+            # fish in the middle, and the bubbles up front.
+            if castle_flag and width > 50:
+                castle.draw(stdscr)
             for kelp in kelp_list:
                 kelp.sway()
                 kelp.draw(stdscr, bottom)

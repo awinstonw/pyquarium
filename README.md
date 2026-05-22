@@ -44,6 +44,9 @@ Run pyquarium in the terminal at the rate of FPS frames-per-second.
 **-k, --kelp**  
 &nbsp;&nbsp;&nbsp;&nbsp;Number of kelp strands to display.
 
+**-c, --castle**  
+&nbsp;&nbsp;&nbsp;&nbsp;Display the castle decoration.
+
 **-v, --version**  
 &nbsp;&nbsp;&nbsp;&nbsp;Print the version number and exit.
 
@@ -56,6 +59,9 @@ Run pyquarium in the terminal at the rate of FPS frames-per-second.
 
 **b, v**  
 &nbsp;&nbsp;&nbsp;&nbsp;Add / remove bubbles.
+
+**c, x**  
+&nbsp;&nbsp;&nbsp;&nbsp;Add / remove castle decoration.
 
 **+, -**  
 &nbsp;&nbsp;&nbsp;&nbsp;Increase / decrease the refresh rate.
