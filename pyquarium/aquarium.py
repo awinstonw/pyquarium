@@ -1,35 +1,34 @@
-"""Constant for the valid fish art styles, and classes for all the
-possible aqarium members.
-"""
+"""Classes for all the possible aqarium members."""
 
 import curses
 import random
 
-# All entries in the dict for an individual fish type must have the same
-# string length.
-FISH_TYPE = [
-    {'right': ['><>'],          'left': ['<><']},
-    {'right': ['>||>'],         'left': ['<||<']},
-    {'right': ['>))>'],         'left': ['<[[<']},
-    {'right': ['>||o', '>||.'], 'left': ['o||<', '.||<']},
-    {'right': ['>))o', '>)).'], 'left': ['o[[<', '.[[<']},
-    {'right': ['>-==>'],        'left': ['<==-<']},
-    {'right': [r'>\\>'],        'left': ['<//<']},
-    {'right': ['><)))*>'],      'left': ['<*(((><']},
-    {'right': ['}-[[[*>'],      'left': ['<*]]]-{']},
-    {'right': [']-<)))b>'],     'left': ['<d(((>-[']},
-    {'right': ['><XXX*>'],      'left': ['<*XXX><']},
-    {'right': ['_.-._.-^=>', '.-._.-.^=>',
-               '-._.-._^=>', '._.-._.^=>'],
-      'left': ['<=^-._.-._', '<=^.-._.-.',
-               '<=^_.-._.-', '<=^._.-._.']},
-    {'right': ['}>=b>'],        'left': ['<d=<{']},
-    {'right': [')+++}Xb>'],     'left': ['<dX{+++(']},
-]
-
 
 class Fish:
     """Fish class for all the fish in the aquarium."""
+
+    # All entries in the dict for an individual fish type must have the
+    # same string length.
+    FISH_TYPE = [
+        {'right': ['><>'],          'left': ['<><']},
+        {'right': ['>||>'],         'left': ['<||<']},
+        {'right': ['>))>'],         'left': ['<[[<']},
+        {'right': ['>||o', '>||.'], 'left': ['o||<', '.||<']},
+        {'right': ['>))o', '>)).'], 'left': ['o[[<', '.[[<']},
+        {'right': ['>-==>'],        'left': ['<==-<']},
+        {'right': [r'>\\>'],        'left': ['<//<']},
+        {'right': ['><)))*>'],      'left': ['<*(((><']},
+        {'right': ['}-[[[*>'],      'left': ['<*]]]-{']},
+        {'right': [']-<)))b>'],     'left': ['<d(((>-[']},
+        {'right': ['><XXX*>'],      'left': ['<*XXX><']},
+        {'right': ['_.-._.-^=>', '.-._.-.^=>',
+                   '-._.-._^=>', '._.-._.^=>'],
+         'left':  ['<=^-._.-._', '<=^.-._.-.',
+                   '<=^_.-._.-', '<=^._.-._.']},
+        {'right': ['}>=b>'],        'left': ['<d=<{']},
+        {'right': [')+++}Xb>'],     'left': ['<dX{+++(']},
+    ]
+
 
     def __init__(self, y: int, x: int):
         """Initialize a fish at cordinates y, x.
@@ -38,7 +37,7 @@ class Fish:
         y -- y coordinate.
         x -- x coodrinate.
         """
-        type = random.choice(FISH_TYPE)
+        type = random.choice(Fish.FISH_TYPE)
         color_pattern = random.choice(('random', 'head-tail', 'single'))
         self.length = len(type['right'][0])
         colors = []
@@ -227,3 +226,29 @@ class Kelp:
             elif segment == ')':
                stdscr.addstr(bottom_edge - i, self.x + 1, segment,
                              curses.color_pair(3))
+
+
+class Castle:
+    """Class for the castle decoration in the aquarium."""
+
+    CASTLE = [
+        ' _   |~  _',
+        '[_]--\'--[_]',
+        '|\'|""`""|\'|',
+        '| | /^\\ | |',
+        '|_|_|I|_|_|',
+    ]
+
+    def __init__(self, y: int, x: int):
+        """Initialize a castle with the bottom right corner at x y
+
+        Keyword arguments:
+        y -- y coordinate.
+        x -- x coordinate.
+        """
+        self.y = y - 4
+        self.x = x - 10
+
+    def draw(self, stdscr):
+        for i, course in enumerate(Castle.CASTLE):
+            stdscr.addstr(self.y + i, self.x, course)
