@@ -19,6 +19,8 @@ def _get_args() -> argparse.Namespace:
                         help='number of kelp strands; default=5')
     parser.add_argument('-c', '--castle', action='store_true',
                         help='include the castle; default=off')
+    parser.add_argument('-d', '--dragon', action='store_true',
+                        help=argparse.SUPPRESS)
     parser.add_argument('fps', nargs='?', default=6, type=int,
                         help='refresh rate; default=6, min=1')
     parser.add_argument('-v', '--version', action='version',
@@ -27,4 +29,5 @@ def _get_args() -> argparse.Namespace:
 
 
 args = _get_args()
-render_aquarium(args.fish, args.bubblers, args.kelp, args.castle, args.fps)
+render_aquarium(args.fish, args.bubblers, args.kelp, args.castle, args.dragon,
+                args.fps)

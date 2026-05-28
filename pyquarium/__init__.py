@@ -17,11 +17,11 @@ import time
 
 import pyquarium.aquarium as aq
 
-__version__ = 'v2.1.0'
+__version__ = 'v2.1.1'
 
 
 def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
-                    include_castle: bool, fps: int):
+                    include_castle: bool, include_dragon: bool, fps: int):
     """Print a moving aquarium to the terminal.
 
     Keyword arguments:
@@ -64,6 +64,9 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
         castle_flag = include_castle
         if castle_flag:
             castle = aq.Castle(bottom, random.randint(11, width - 1))
+        dragon_flag = include_dragon
+        if dragon_flag:
+            dragon = aq.Dragon(bottom, random.randint(25, width - 1))
         # Color 1 is the bubble color.
         curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
         # Color 3 is the kelp color.
@@ -114,6 +117,12 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
             elif key == ord('x'):
                 castle_flag = False
                 del castle
+            elif key == ord('D'):
+                dragon = aq.Dragon(bottom, random.randint(25, width - 1))
+                dragon_flag = True
+            elif key == ord('S') or  key == ord('s'):
+                dragon_flag = False
+                del dragon
             elif key == ord('+'):
                 denominator += 1
             elif key == ord('-') and denominator > 1:
@@ -122,6 +131,8 @@ def render_aquarium(fish_count: int, bubbler_count: int, kelp_count: int,
             # fish in the middle, and the bubbles up front.
             if castle_flag and width > 50:
                 castle.draw(stdscr)
+            if dragon_flag and width > 50:
+                dragon.draw(stdscr)
             for kelp in kelp_list:
                 kelp.sway()
                 kelp.draw(stdscr, bottom)
