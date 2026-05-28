@@ -47,9 +47,9 @@ class Fish:
         if color_pattern == 'single' or color_pattern == 'head-tail':
             colors = [random.choice(range(3, 8))] * self.length
         if color_pattern == 'head-tail':
-            headTailColor = random.choice(range(3, 8))
-            colors[0] = headTailColor
-            colors[-1] = headTailColor
+            head_tail_color = random.choice(range(3, 8))
+            colors[0] = head_tail_color
+            colors[-1] = head_tail_color
         self.right = type['right']
         self.left = type['left']
         self.color = colors
@@ -171,11 +171,11 @@ class Bubbler:
             Keyword arguments:
             right_edge -- Right boundary for the bubbles.
             """
-            diceRoll = random.randint(1, 6)
+            dice_roll = random.randint(1, 6)
             if self.y != self.origin:  # Bubble up from a fixed point.
-                if (diceRoll == 1) and (self.x > 0):
+                if (dice_roll == 1) and (self.x > 0):
                     self.x -= 1
-                elif (diceRoll == 2) and (self.x < right_edge):
+                elif (dice_roll == 2) and (self.x < right_edge):
                     self.x += 1
             self.y -= 1
 
@@ -252,3 +252,35 @@ class Castle:
     def draw(self, stdscr):
         for i, course in enumerate(Castle.CASTLE):
             stdscr.addstr(self.y + i, self.x, course)
+
+
+class Dragon:
+    """Class for the secret dragon decoration in the aquarium."""
+
+    DRAGON = [
+        '                \\||/',
+        '                |  @___oo',
+        '      /\\  /\\   / (__,,,,|',
+        '     ) /^\\) ^\\/ _)',
+        '     )   /^\\/   _)',
+        '     )   _ /  / _)',
+        ' /\\  )/\\/ ||  | )_)',
+        '<  >      |(,,) )__)',
+        ' ||      /    \\)___)\\',
+        ' | \\____(      )___) )___',
+        '  \\______(_______;;; __;;;',
+    ]
+
+    def __init__(self, y: int, x: int):
+        """Initialize a dragon with the bottom right corner at x y
+
+        Keyword arguments:
+        y -- y coordinate.
+        x -- x coordinate.
+        """
+        self.y = y - 10
+        self.x = x - 25
+
+    def draw(self, stdscr):
+        for i, course in enumerate(Dragon.DRAGON):
+            stdscr.addstr(self.y + i, self.x, course, curses.color_pair(5))
